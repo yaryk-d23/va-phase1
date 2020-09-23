@@ -1,7 +1,7 @@
 (function () {
     angular.module('App')
         .component('formsList', {
-            templateUrl: window["SITE_LOCATION_URL"] + '/SiteAssets/app/components/forms-list/forms-list.view.html?rnd' + Math.random(),
+            templateUrl: window["SITE_LOCATION_URL"] + '/SiteAssets/bcm-updates/components/forms-list/forms-list.view.html?rnd' + Math.random(),
             bindings: {
                 //user: '<'
             },

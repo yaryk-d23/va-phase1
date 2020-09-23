@@ -5,8 +5,7 @@
     <div ng-view></div>
  </div>
 <script>
-  window["SITE_LOCATION_URL"] = "https://chironitcom.sharepoint.com/sites/Demo/va"; //https://dvagov.sharepoint.com/sites/VACOOMOBO/FROS/a123 Relative
-  window["SITE_RELATIVE_URL"] = "/sites/Demo/va"; ///sites/VACOOMOBO/FROS/a123 
+  window["SITE_LOCATION_URL"] = "https://dvagov.sharepoint.com/sites/VACOOMOBO/FROS/a123"; //https://dvagov.sharepoint.com/sites/VACOOMOBO/FROS/a123 
 
   var modules = [
       //modules
@@ -47,7 +46,7 @@ var scripts = [
     document.write(
       '<link rel="stylesheet" type="text/css" href="' +
         window.SITE_LOCATION_URL +
-        "/SiteAssets/app/" +
+        "/SiteAssets/bcm-updates/" +
         styles[i] +
         "?rnd=" +
         new Date().getTime() +
@@ -59,7 +58,7 @@ var scripts = [
     document.write(
       '<script language="javascript" type="text/javascript" src="' +
         window.SITE_LOCATION_URL +
-        "/SiteAssets/app/" +
+        "/SiteAssets/bcm-updates/" +
         modules[i] +
         '"><\/script>'
     );
@@ -69,7 +68,7 @@ var scripts = [
     document.write(
       '<script language="javascript" type="text/javascript" src="' +
         window.SITE_LOCATION_URL +
-        "/SiteAssets/app/" +
+        "/SiteAssets/bcm-updates/" +
         scripts[i] +
         "?rnd=" +
         new Date().getTime() +

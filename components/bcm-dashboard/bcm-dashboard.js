@@ -1,7 +1,7 @@
 (function () {
     angular.module('App')
         .component('bcmDashboard', {
-            templateUrl: window["SITE_LOCATION_URL"] + '/SiteAssets/app/components/bcm-dashboard/bcm-dashboard.view.html?rnd' + Math.random(),
+            templateUrl: window["SITE_LOCATION_URL"] + '/SiteAssets/bcm-updates/components/bcm-dashboard/bcm-dashboard.view.html?rnd' + Math.random(),
             bindings: {
                 //user: '<'
             },

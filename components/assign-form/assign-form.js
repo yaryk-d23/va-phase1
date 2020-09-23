@@ -1,7 +1,7 @@
 (function () {
     angular.module('App')
         .component('assignForm', {
-            templateUrl: window["SITE_LOCATION_URL"] + '/SiteAssets/app/components/assign-form/assign-form.view.html?rnd' + Math.random(),
+            templateUrl: window["SITE_LOCATION_URL"] + '/SiteAssets/bcm-updates/components/assign-form/assign-form.view.html?rnd' + Math.random(),
             bindings: {
                 //user: '<'
             },
@@ -31,7 +31,7 @@
                 animation: true,
                 ariaLabelledBy: 'modal-title',
                 ariaDescribedBy: 'modal-body',
-                templateUrl: window["SITE_LOCATION_URL"] + '/SiteAssets/app/components/section-modal/section-modal.view.html?rnd' + Math.random(),
+                templateUrl: window["SITE_LOCATION_URL"] + '/SiteAssets/bcm-updates/components/section-modal/section-modal.view.html?rnd' + Math.random(),
                 controller: 'sectionModalCtrl',
                 controllerAs: 'ctrl',
                 resolve: {
