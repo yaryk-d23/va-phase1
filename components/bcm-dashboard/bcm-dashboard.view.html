@@ -1,0 +1,24 @@
+<div id="bcm-dashboard">
+  <div class="dashboard-header">
+    <h3>Business Cycle Memos</h3>
+    <div>
+      <a ng-href="#/forms-list" class="btn btn-primary"> Update BCM </a>
+    </div>
+  </div>
+  <div>
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>Business Process Area</th>
+        <th>Last Updated</th>
+        <th>BCM Status</th>
+        <th>POC</th>
+      </tr>
+      <tr ng-repeat="item in ctrl.items">
+        <td>{{item.BusinessProcessArea}}</td>
+        <td>{{item.Modified | date:'MM/dd/yyyy'}}</td>
+        <td>{{item.BCMStatus}}</td>
+        <td>{{item.POC ? item.POC.Title : ''}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

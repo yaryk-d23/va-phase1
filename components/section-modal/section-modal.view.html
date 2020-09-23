@@ -1,0 +1,107 @@
+<div id="section-modal">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="ctrl.cancel">&times;</button>
+    <h3 class="modal-title" id="modal-title">BCM Section</h3>
+  </div>
+  <div class="modal-body" id="modal-body">
+    <ng-form name="ctrl.form">
+      <div class="form-group">
+        <label for="Title" class="control-label required"
+          >BCM Section Title</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          name="Title"
+          id="Title"
+          ng-model="ctrl.item.Title"
+          required
+        />
+        <span
+          class="error-msg"
+          ng-show="ctrl.form.Title.$touched && ctrl.form.Title.$invalid"
+          >BCM Section Title is required.</span
+        >
+      </div>
+      <div class="form-group">
+        <label for="BCMSectionNumber" class="control-label required"
+          >BCM Section Number</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          name="BCMSectionNumber"
+          id="BCMSectionNumber"
+          ng-model="ctrl.item.BCMSectionNumber"
+          required
+        />
+        <span
+          class="error-msg"
+          ng-show="ctrl.form.BCMSectionNumber.$touched && ctrl.form.BCMSectionNumber.$invalid"
+          >BCM Section Number is required.</span
+        >
+      </div>
+      <div class="form-group">
+        <label for="BCMSectionDescription" class="control-label required"
+          >BCM Section Description</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          name="BCMSectionDescription"
+          id="BCMSectionDescription"
+          ng-model="ctrl.item.BCMSectionDescription"
+          required
+        />
+        <span
+          class="error-msg"
+          ng-show="ctrl.form.BCMSectionDescription.$touched && ctrl.form.BCMSectionDescription.$invalid"
+          >BCM Section Description is required.</span
+        >
+      </div>
+      <div class="form-group">
+        <label for="Assignee" class="control-label required"
+          >Assignee Email Address</label
+        >
+        <ui-select
+          name="Assignee"
+          ng-model="ctrl.item.Assignee"
+          theme="bootstrap"
+          close-on-select="true"
+          ng-change="ctrl.onChangeAssignee()"
+          ng-class="{'ng-untouched': (!ctrl.form.MPSName.$touched)}"
+          required
+          fix-focus-on-touch
+        >
+          <ui-select-match placeholder="Type...">
+            {{$select.selected.Title}} {{'<' +($select.selected.Email ||
+            $select.selected.EMail || '-') + '>'}}
+          </ui-select-match>
+          <ui-select-choices
+            refresh="ctrl.getUsers($select)"
+            refresh-delay="0"
+            repeat="user as user in ctrl.allUsers"
+          >
+            <div ng-bind-html="user.Title | highlight: $select.search"></div>
+            <small>
+              <div>Email: {{user.Email || user.EMail}}</div>
+            </small>
+          </ui-select-choices>
+        </ui-select>
+        <span
+          class="error-msg"
+          ng-show="ctrl.form.Assignee.$touched && ctrl.form.Assignee.$invalid"
+          >Assignee Email Address is required.</span
+        >
+      </div>
+    </ng-form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ctrl.ok()">
+      OK
+    </button>
+    <button class="btn btn-warning" type="button" ng-click="ctrl.cancel()">
+      Cancel
+    </button>
+  </div>
+</div>

@@ -1,0 +1,149 @@
+<div id="assign-form">
+  <h3>Assign BCM Sections</h3>
+  <div>
+    <ng-form name="ctrl.form">
+      <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+          <label for="BCMID" class="control-label required">BCM ID</label>
+          <input
+            type="text"
+            class="form-control"
+            name="BCMID"
+            id="BCMID"
+            ng-model="ctrl.formData.BCMID"
+            required
+          />
+          <span
+            class="error-msg"
+            ng-show="ctrl.form.BCMID.$touched && ctrl.form.BCMID.$invalid"
+            >BCM ID is required.</span
+          >
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+          <label for="BCMTitle" class="control-label required">BCM Title</label>
+          <select
+            class="form-control"
+            name="BCMTitle"
+            id="BCMTitle"
+            ng-options="i as i.Title for i in ctrl.bcmItems track by i.Id"
+            ng-model="ctrl.formData.BCMTitle"
+            required
+          ></select>
+          <span
+            class="error-msg"
+            ng-show="ctrl.form.BCMTitle.$touched && ctrl.form.BCMTitle.$invalid"
+            >BCM Title is required.</span
+          >
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+          <label for="BCMDueDate" class="control-label required"
+            >BCM Due Date</label
+          >
+          <p class="input-group">
+            <input
+              type="text"
+              name="BCMDueDate"
+              id="BCMDueDate"
+              class="form-control"
+              uib-datepicker-popup="{{'MM/dd/yyyy'}}"
+              ng-model="ctrl.formData.BCMDueDate"
+              is-open="BCMDueDateOpened"
+              datepicker-options="ctrl.dateOptions"
+              close-text="Close"
+              show-button-bar="false"
+              ng-click="BCMDueDateOpened=true"
+              readonly
+              required
+            />
+            <span class="input-group-btn">
+              <button
+                type="button"
+                class="btn btn-default"
+                ng-click="BCMDueDateOpened=true"
+                style="padding: 9px 12px"
+              >
+                <i class="glyphicon glyphicon-calendar"></i>
+              </button>
+            </span>
+          </p>
+          <span
+            class="error-msg"
+            ng-show="ctrl.form.BCMDueDate.$touched && ctrl.form.BCMDueDate.$invalid"
+            >BCM Due Date is required.</span
+          >
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </ng-form>
+  </div>
+  <div>
+    <div class="sections-header">
+      <h4>Sections</h4>
+      <i
+        class="glyphicon glyphicon-plus"
+        ng-click="ctrl.openSectionModal()"
+      ></i>
+    </div>
+    <div>
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>BCM Section Title</th>
+          <th>BCM Section Number</th>
+          <th>BCM Section Description</th>
+          <th>Assignee Email Address</th>
+        </tr>
+        <tr ng-repeat="item in ctrl.sections">
+          <td>{{item.Title}}</td>
+          <td>{{item.BCMSectionNumber}}</td>
+          <td>{{item.BCMSectionDescription}}</td>
+          <td>{{item.Assignee ? item.Assignee.Title : ''}}</td>
+        </tr>
+        <tr ng-if="ctrl.sections.length === 0">
+          <td colspan="4">Please add new sections...</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <p>
+        <label for="Attachments" class="control-label">
+          Attachments
+          <select-files
+            name="Attachments"
+            model="ctrl.$AttachmentsFiles"
+          ></select-files>
+        </label>
+      </p>
+      <p ng-repeat="file in ctrl.$AttachmentsFiles track by $index">
+        <!-- <input
+          type="text"
+          class="form-control"
+          ng-value="file.$file.name"
+          disabled
+        /> -->
+        <span class="file-name"
+          >{{file.$file.name}} ({{ctrl.parseByteToMB(file.$file.size)}})</span
+        >
+        <span
+          ng-if="file.url"
+          class="glyphicon glyphicon-remove"
+          style="
+            color: red;
+            position: absolute;
+            right: 0;
+            top: 10px;
+            cursor: pointer;
+          "
+        ></span>
+      </p>
+    </div>
+    <div class="text-right">
+      <button type="button" class="btn btn-primary" ng-click="ctrl.submit()">
+        Submit
+      </button>
+    </div>
+  </div>
+</div>
