@@ -1,0 +1,29 @@
+<div id="publish-dashboard">
+  <div class="dashboard-header">
+    <h3>Publish BCM Sections</h3>
+    <div>
+      <a ng-href="#/forms-list" class="btn btn-primary">Forms List</a>
+    </div>
+  </div>
+  <div>
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>BCM ID</th>
+        <th>BCM Title</th>
+        <th>BCM Approved Date</th>
+        <th style="width: 70px"></th>
+      </tr>
+      <tr ng-repeat="item in ctrl.bcmSections">
+        <td>{{item[0].BCMID}}</td>
+        <td>{{item[0].BCMTitle.Title}}</td>
+        <td>{{item[0].BCMApprovedDate | date:'MM/dd/yyyy'}}</td>
+        <td>
+          <a ng-href="{{'#/publish-sections/'+item[0].BCMID}}"
+            ><i class="glyphicon glyphicon-pencil edit-icon"></i
+          ></a>
+          <!-- <i class="glyphicon glyphicon-trash remove-icon"></i> -->
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

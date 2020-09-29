@@ -6,6 +6,7 @@
  </div>
 <script>
   window["SITE_LOCATION_URL"] = "https://dvagov.sharepoint.com/sites/VACOOMOBO/FROS/a123"; //https://dvagov.sharepoint.com/sites/VACOOMOBO/FROS/a123 
+  window["APP_PAGE_LOCATION_URL"] = "https://dvagov.sharepoint.com/sites/VACOOMOBO/FROS/a123/SitePages/BCM-Updates.aspx"; //https://dvagov.sharepoint.com/sites/VACOOMOBO/FROS/a123/SitePages/BCM-Updates.aspx 
 
   var modules = [
       //modules
@@ -25,12 +26,23 @@ var scripts = [
       //app
       "app.js",
       "services/api.service.js",
+      "services/email.service.js",
       "services/preloader.js",
       "services/fileSelect.js",
       "components/bcm-dashboard/bcm-dashboard.js",
       "components/forms-list/forms-list.js",
       "components/assign-form/assign-form.js",
       "components/section-modal/section-modal.js",
+      "components/internal-control-modal/internal-control-modal.js",
+      "components/assign-form-dashboard/assign-form-dashboard.js",
+      "components/update-section/update-section.js",
+      "components/my-assigned-forms-dashboard/my-assigned-forms-dashboard.js",
+      "components/approve-section/approve-section.js",
+      "components/combine-sections/combine-sections.js",
+      "components/publish-sections/publish-sections.js",
+      "components/approve-dashboard/approve-dashboard.js",
+      "components/combine-dashboard/combine-dashboard.js",
+      "components/publish-dashboard/publish-dashboard.js",
     ];
   var styles = [
       "modules/bootstrap/css/bootstrap.min.css",
@@ -40,6 +52,16 @@ var scripts = [
       "components/forms-list/forms-list.style.css",
       "components/assign-form/assign-form.style.css",
       "components/section-modal/section-modal.style.css",
+      "components/internal-control-modal/internal-control-modal.style.css",
+      "components/assign-form-dashboard/assign-form-dashboard.style.css",
+      "components/update-section/update-section.style.css",
+      "components/my-assigned-forms-dashboard/my-assigned-forms-dashboard.style.css",
+      "components/approve-section/approve-section.style.css",
+      "components/combine-sections/combine-sections.style.css",
+      "components/publish-sections/publish-sections.style.css",
+      "components/approve-dashboard/approve-dashboard.style.css",
+      "components/combine-dashboard/combine-dashboard.style.css",
+      "components/publish-dashboard/publish-dashboard.style.css",
     ];
 
   for (var i = 0; i < styles.length; i++) {
@@ -49,7 +71,7 @@ var scripts = [
         "/SiteAssets/bcm-updates/" +
         styles[i] +
         "?rnd=" +
-        new Date().getTime() +
+        new Date().getTime() * new Date().getTime() +
         '">'
     );
   }
@@ -71,7 +93,7 @@ var scripts = [
         "/SiteAssets/bcm-updates/" +
         scripts[i] +
         "?rnd=" +
-        new Date().getTime() +
+        new Date().getTime() * new Date().getTime() +
         '"><\/script>'
     );
   }

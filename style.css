@@ -1,3 +1,15 @@
+.dashboard-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1em;
+}
+.app-container h3 {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
 /*  */
 .form-control.ng-invalid:not(.ng-untouched),
 .form-control.ng-invalid-required:not(.ng-untouched),
@@ -24,6 +36,16 @@
 }
 .file-name {
   margin-bottom: 1em;
+}
+.edit-icon {
+  color: green;
+  padding: 3px;
+  cursor: pointer;
+}
+.remove-icon {
+  color: red;
+  padding: 3px;
+  cursor: pointer;
 }
 /* overwrite bootstrap */
 

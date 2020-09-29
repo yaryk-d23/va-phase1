@@ -1,0 +1,151 @@
+<div id="publish-sections">
+  <h3>Publish BCM Sections</h3>
+  <ng-form name="ctrl.form">
+    <div>
+      <div class="col-sm-12 col-md-3">
+        <div class="form-group">
+          <label for="BCMID" class="control-label required">BCM ID</label>
+          <select
+            class="form-control"
+            name="BCMID"
+            id="BCMID"
+            ng-options="v as v[0].BCMID for (i, v) in ctrl.allSections track by v[0].BCMID"
+            ng-model="ctrl.formData"
+            ng-change="ctrl.changeBCMId()"
+            required
+          ></select>
+          <span
+            class="error-msg"
+            ng-show="ctrl.form.BCMID.$touched && ctrl.form.BCMID.$invalid"
+            >BCM ID is required.</span
+          >
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-3">
+        <div class="form-group">
+          <label for="BCMTitle" class="control-label">BCM Title</label>
+          <input
+            type="text"
+            class="form-control"
+            name="BCMTitle"
+            id="BCMTitle"
+            ng-model="ctrl.formData[0].BCMTitle.Title"
+            readonly
+          />
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-3">
+        <div>
+          <label for="DraftBCMAttachment" class="control-label">
+            Draft BCM
+          </label>
+        </div>
+        <p
+          ng-repeat="file in ctrl.$DraftBCMAttachment track by $index"
+          style="position: relative"
+        >
+          <a ng-href="{{file.url}}" target="_blank" ng-if="file.url">
+            <span class="file-name">{{file.$file.name}}</span>
+          </a>
+        </p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div>
+      <div class="col-sm-12">
+        <div class="sections-header">
+          <h4>BCM Updates</h4>
+        </div>
+        <div>
+          <table class="table table-bordered table-striped">
+            <tr>
+              <th>BCM Section Title</th>
+              <th>BCM Section Number</th>
+              <th>BCM Section Description</th>
+              <th style="width: 220px">BCM Attachments</th>
+            </tr>
+            <tr ng-repeat="item in ctrl.formData track by $index">
+              <td>{{item.Title}}</td>
+              <td>{{item.BCMSectionNumber}}</td>
+              <td>{{item.BCMSectionDescription}}</td>
+              <td>
+                <div
+                  ng-repeat="file in ctrl.$Attachments[item.Id] track by $index"
+                  style="
+                    position: relative;
+                    max-width: 200px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                  "
+                >
+                  <a
+                    ng-href="{{file.url}}"
+                    target="_blank"
+                    ng-if="file.url"
+                    uib-tooltip="{{file.$file.name}}"
+                    tooltip-append-to-body="true"
+                    tooltip-class="fileTooltip"
+                  >
+                    <span class="file-name" style="font-size: 12px"
+                      >{{file.$file.name}}</span
+                    >
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div>
+      <div class="col-sm-12">
+        <div class="sections-header">
+          <h4>Internal Controls</h4>
+        </div>
+        <div>
+          <table class="table table-bordered table-striped">
+            <tr>
+              <th>Internal Control ID</th>
+              <th>Internal Control Description</th>
+            </tr>
+            <tr ng-repeat="item in ctrl.allInternalControls track by $index">
+              <td>{{item.Title}}</td>
+              <td>
+                <div
+                  ng-bind-html="ctrl.toHtml(item.InternalControlDescription)"
+                ></div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div>
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="Comments" class="control-label">Comments </label>
+          <textarea
+            rows="3"
+            class="form-control"
+            name="FinalApproverComments"
+            id="FinalApproverComments"
+            ng-model="ctrl.FinalApproverComments"
+          ></textarea>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </ng-form>
+  <div class="text-right">
+    <a class="btn btn-default" ng-href="#/publish-dashboard"> Cancel </a>
+    <button type="button" class="btn btn-warning" ng-click="ctrl.reject()">
+      Reject
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="ctrl.publish()">
+      Publish
+    </button>
+  </div>
+</div>

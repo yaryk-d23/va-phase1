@@ -1,0 +1,31 @@
+<div id="assign-form-dashboard">
+  <div class="dashboard-header">
+    <h3>My Assigned BCM Sections</h3>
+    <div>
+      <a ng-href="#/forms-list" class="btn btn-primary">Forms List</a>
+    </div>
+  </div>
+  <div>
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>BCM ID</th>
+        <th>BCM Title</th>
+        <th>BCM Due Date</th>
+        <th>BCM Section Title</th>
+        <th style="width: 70px"></th>
+      </tr>
+      <tr ng-repeat="item in ctrl.bcmSections">
+        <td>{{item.BCMID}}</td>
+        <td>{{item.BCMTitle.Title}}</td>
+        <td>{{item.BCMDueDate | date:'MM/dd/yyyy'}}</td>
+        <td>{{item.Title}}</td>
+        <td>
+          <a ng-href="{{'#/update-section/'+item.BCMID}}"
+            ><i class="glyphicon glyphicon-pencil edit-icon"></i
+          ></a>
+          <!-- <i class="glyphicon glyphicon-trash remove-icon"></i> -->
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

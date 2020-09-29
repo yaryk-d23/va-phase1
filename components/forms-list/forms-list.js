@@ -6,26 +6,27 @@
                 //user: '<'
             },
             controllerAs: 'ctrl',
-            controller: ['$ApiService', ctrl]
+            controller: ['$ApiService', '$Preload', ctrl]
         });
 
-    function ctrl() {
+    function ctrl($ApiService, $Preload) {
+        $Preload.hide();
         var ctrl = this;
         ctrl.links = [{
             title: 'Assign BCM Sections',
-            link: '#/assign-form'
+            link: '#/assign-form-dashboard'
         }, {
             title: 'Update/Submit BCM Sections',
-            link: ''
+            link: '#/my-assigned-forms-dashboard'
         }, {
             title: 'Approve BCM Sections',
-            link: ''
+            link: '#/approve-dashboard'
         }, {
             title: 'Combine BCM Sections',
-            link: ''
+            link: '#/combine-dashboard'
         }, {
             title: 'Publish Updated BCM',
-            link: ''
+            link: '#/publish-dashboard'
         },];
     }
 })();

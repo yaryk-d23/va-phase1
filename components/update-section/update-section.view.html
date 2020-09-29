@@ -1,0 +1,278 @@
+<div id="update-section">
+  <h3>Update/Submit BCM Sections</h3>
+  <div>
+    <ng-form name="ctrl.form">
+      <div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <label for="BCMID" class="control-label required">BCM ID</label>
+            <select
+              class="form-control"
+              name="BCMID"
+              id="BCMID"
+              ng-options="i as i.BCMID for i in ctrl.bcmSections track by i.Id"
+              ng-model="ctrl.formData"
+              ng-change="ctrl.changeBCMId()"
+              required
+            ></select>
+            <span
+              class="error-msg"
+              ng-show="ctrl.form.BCMID.$touched && ctrl.form.BCMID.$invalid"
+              >BCM ID is required.</span
+            >
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <label for="BCMTitle" class="control-label">BCM Title</label>
+            <input
+              type="text"
+              class="form-control"
+              name="BCMTitle"
+              id="BCMTitle"
+              ng-model="ctrl.formData.BCMTitle.Title"
+              readonly
+            />
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <label for="BCMDueDate" class="control-label">BCM Due Date</label>
+            <input
+              type="text"
+              name="BCMDueDate"
+              id="BCMDueDate"
+              class="form-control"
+              uib-datepicker-popup="{{'MM/dd/yyyy'}}"
+              ng-model="ctrl.formData.BCMDueDate"
+              datepicker-options="ctrl.dateOptions"
+              close-text="Close"
+              show-button-bar="false"
+              readonly
+            />
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <label for="BCMUpdateDate" class="control-label required"
+              >BCM Update Date
+            </label>
+            <p class="input-group">
+              <input
+                type="text"
+                name="BCMUpdateDate"
+                id="BCMUpdateDate"
+                class="form-control"
+                uib-datepicker-popup="{{'MM/dd/yyyy'}}"
+                ng-model="ctrl.formData.BCMUpdateDate"
+                is-open="BCMUpdateDateOpened"
+                datepicker-options="ctrl.dateOptions"
+                close-text="Close"
+                show-button-bar="false"
+                ng-click="BCMUpdateDateOpened=true"
+                readonly
+                required
+              />
+              <span class="input-group-btn">
+                <button
+                  type="button"
+                  class="btn btn-default"
+                  ng-click="BCMUpdateDateOpened=true"
+                  style="padding: 9px 12px"
+                >
+                  <i class="glyphicon glyphicon-calendar"></i>
+                </button>
+              </span>
+            </p>
+            <span
+              class="error-msg"
+              ng-show="ctrl.form.BCMUpdateDate.$touched && ctrl.form.BCMUpdateDate.$invalid"
+              >BCM Update Date is required.</span
+            >
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <label for="KeyStakeholders" class="control-label"
+              >Key Stakeholders
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              name="KeyStakeholders"
+              id="KeyStakeholders"
+              ng-model="ctrl.formData.KeyStakeholders"
+              required
+            />
+            <span
+              class="error-msg"
+              ng-show="ctrl.form.KeyStakeholders.$touched && ctrl.form.KeyStakeholders.$invalid"
+              >Key Stakeholders is required.</span
+            >
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <label for="BCMChecklistUpdated" class="control-label"
+              >BCM Checklist Updated
+            </label>
+            <div class="checkbox">
+              <label>
+                <input
+                  type="checkbox"
+                  name="BCMChecklistUpdated"
+                  id="BCMChecklistUpdated"
+                  ng-model="ctrl.formData.BCMChecklistUpdated"
+                />
+                (Checklist is complete)
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div>
+            <label for="ChecklistAttachment" class="control-label">
+              Checklist Attachment
+              <select-files
+                name="Attachments"
+                model="ctrl.$ChecklistAttachment"
+              ></select-files>
+            </label>
+          </div>
+          <p
+            ng-repeat="file in ctrl.$ChecklistAttachment track by $index"
+            style="position: relative"
+          >
+            <span ng-if="!file.url" class="file-name">{{file.$file.name}}</span>
+            <a ng-href="{{file.url}}" target="_blank" ng-if="file.url">
+              <span class="file-name">{{file.$file.name}}</span>
+            </a>
+            <span
+              class="glyphicon glyphicon-remove"
+              style="
+                color: red;
+                position: absolute;
+                margin-left: 5px;
+                top: 4px;
+                cursor: pointer;
+              "
+              ng-click="ctrl.removeChecklistAttachment()"
+            ></span>
+          </p>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div>
+        <div class="col-sm-12">
+          <div class="form-group">
+            <label for="BCMSectionUpdate" class="control-label"
+              >BCM Section Update
+            </label>
+            <textarea
+              rows="3"
+              class="form-control"
+              name="BCMSectionUpdate"
+              id="BCMSectionUpdate"
+              ng-model="ctrl.formData.BCMSectionUpdate"
+              required
+            ></textarea>
+            <span
+              class="error-msg"
+              ng-show="ctrl.form.BCMSectionUpdate.$touched && ctrl.form.BCMSectionUpdate.$invalid"
+              >BCM Section Update is required.</span
+            >
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </ng-form>
+    <div>
+      <div class="sections-header">
+        <h4>Internal Controls</h4>
+        <i
+          class="glyphicon glyphicon-plus"
+          ng-click="ctrl.openInternalControlModal()"
+        ></i>
+      </div>
+      <div>
+        <table class="table table-bordered table-striped">
+          <tr>
+            <th>Internal Control ID</th>
+            <th>Internal Control Description</th>
+            <th style="width: 70px"></th>
+          </tr>
+          <tr ng-repeat="item in ctrl.internalControls track by $index">
+            <td>{{item.Title}}</td>
+            <td>
+              <div
+                ng-bind-html="ctrl.toHtml(item.InternalControlDescription)"
+              ></div>
+            </td>
+            <td>
+              <i
+                class="glyphicon glyphicon-pencil edit-icon"
+                ng-click="ctrl.updateInternalControl($index)"
+              ></i>
+              <i
+                class="glyphicon glyphicon-trash remove-icon"
+                ng-click="ctrl.deleteInternalControl($index)"
+              ></i>
+            </td>
+          </tr>
+          <tr ng-if="ctrl.internalControls.length === 0">
+            <td colspan="3">Please add new internal control...</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="col-sm-12">
+        <div>
+          <label for="Attachments" class="control-label">
+            Attachments
+            <select-files
+              multiple
+              name="Attachments"
+              model="ctrl.$Attachments"
+            ></select-files>
+          </label>
+        </div>
+        <p
+          ng-repeat="file in ctrl.$Attachments track by $index"
+          style="position: relative"
+        >
+          <span ng-if="!file.url" class="file-name">{{file.$file.name}}</span>
+          <a ng-href="{{file.url}}" target="_blank" ng-if="file.url">
+            <span class="file-name">{{file.$file.name}}</span>
+          </a>
+          <span
+            class="glyphicon glyphicon-remove"
+            style="
+              color: red;
+              position: absolute;
+              margin-left: 5px;
+              top: 4px;
+              cursor: pointer;
+            "
+            ng-click="ctrl.removeAttachment($index)"
+          ></span>
+        </p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="text-right">
+      <a class="btn btn-warning" ng-href="#/my-assigned-forms-dashboard">
+        Cancel
+      </a>
+      <button type="button" class="btn btn-success" ng-click="ctrl.save()">
+        Save
+      </button>
+      <button type="button" class="btn btn-primary" ng-click="ctrl.save(true)">
+        Submit
+      </button>
+    </div>
+  </div>
+</div>

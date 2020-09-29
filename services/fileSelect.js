@@ -25,8 +25,11 @@
                 base64: ''
               });
             }
-            scope.$files = $tmpFiles;
-            scope.$apply();
+            setTimeout(function () {
+              scope.$apply(function () {
+                scope.$files = scope.$files.concat($tmpFiles);
+              });
+            }, 0);
             //   $parse(iAttrs.selectFile).assign(scope,this.files);
           });
 

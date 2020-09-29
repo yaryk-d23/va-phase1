@@ -1,0 +1,12 @@
+#update-section .sections-header {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: left;
+  align-items: center;
+  margin-bottom: 1em;
+}
+#update-section .sections-header i {
+  margin-left: 5px;
+  padding-bottom: 3px;
+  cursor: pointer;
+}

@@ -5,7 +5,9 @@
                 getListItems: getListItems,
                 getListChoiceField: getListChoiceField,
                 getUser: getUser,
+                getCurrentUser: getCurrentUser,
                 saveData: saveData,
+                deleteListItem: deleteListItem,
                 getFormDigestValue: getFormDigestValue,
                 uploadFile: uploadFile,
                 uploadAttachments: uploadAttachments,
@@ -32,6 +34,13 @@
                 }).then(function (res) {
                     return res.data.d.results[0];
                 }, error => error);
+            }
+
+            function getCurrentUser(params) {
+                return $http.get(window["SITE_LOCATION_URL"] + '/_api/web/currentuser?' + params)
+                    .then(function (res) {
+                        return res.data;
+                    });
             }
 
             function getUser(query) {
@@ -86,26 +95,6 @@
                 });
             }
 
-            function uploadAttachments(listTitle, itemId, file) {
-                return new Promise(function (resolve, reject) {
-                    getFormDigestValue().then(function (formDigestValue) {
-                        $http({
-                            url: window["SITE_LOCATION_URL"] +
-                                '/_api/web/lists/getbytitle(\'' + listTitle + '\')/Items(' + itemId + ')/AttachmentFiles/add(FileName=\'' + file.name + '\')?$select=*',
-                            method: 'POST',
-                            data: file,
-                            headers: {
-                                "accept": "application/json;odata=verbose",
-                                "content-type": file.type,
-                                "X-RequestDigest": formDigestValue
-                            },
-                            data: file
-                        }).then(function (res) {
-                            resolve(res.data.d);
-                        });
-                    });
-                });
-            }
 
             function updateListItem(listTitle, itemId, data) {
                 return new Promise(function (resolve, reject) {
@@ -129,6 +118,49 @@
                 });
             }
 
+
+            function deleteListItem(listTitle, itemId) {
+                return new Promise(function (resolve, reject) {
+                    getFormDigestValue().then(function (formDigestValue) {
+                        $http({
+                            url: window["SITE_LOCATION_URL"] +
+                                '/_api/web/lists/getbytitle(\'' + listTitle + '\')/Items(' + itemId + ')',
+                            method: 'POST',
+                            headers: {
+                                "accept": "application/json;odata=verbose",
+                                "content-type": "application/json;odata=verbose",
+                                "X-RequestDigest": formDigestValue,
+                                'X-HTTP-Method': 'DELETE',
+                                "IF-MATCH": "*"
+                            },
+                        }).then(function (res) {
+                            resolve(true);
+                        });
+                    });
+                });
+            }
+
+            function uploadAttachments(listTitle, itemId, file) {
+                return new Promise(function (resolve, reject) {
+                    getFormDigestValue().then(function (formDigestValue) {
+                        $http({
+                            url: window["SITE_LOCATION_URL"] +
+                                '/_api/web/lists/getbytitle(\'' + listTitle + '\')/Items(' + itemId + ')/AttachmentFiles/add(FileName=\'' + file.name + '\')?$select=*',
+                            method: 'POST',
+                            data: file,
+                            headers: {
+                                "accept": "application/json;odata=verbose",
+                                "content-type": file.type,
+                                "X-RequestDigest": formDigestValue
+                            },
+                            data: file
+                        }).then(function (res) {
+                            resolve(res.data.d);
+                        });
+                    });
+                });
+            }
+
             function getFormDigestValue() {
                 return new Promise(function (resolve, reject) {
                     $http({
@@ -144,7 +176,7 @@
                 });
             }
 
-            function uploadFile(libraryTitle, data) {
+            function uploadFile(libraryTitle, data, spdata) {
                 return new Promise(function (resolve, reject) {
                     getFormDigestValue().then(function (formDigestValue) {
                         var config = {
@@ -164,11 +196,39 @@
                             data: data,
                             headers: config.headers
                         }).then(function (res) {
-                            resolve(res.data.d);
+                            if (spdata) {
+                                updateListItem(libraryTitle, res.data.d.ListItemAllFields.Id, spdata).then(function () {
+                                    resolve(res.data.d);
+                                });
+                            }
+                            else {
+                                resolve(res.data.d);
+                            }
                         });
                     });
                 });
 
+            }
+
+            function removeFileFromLib(libTitle, fileName) {
+                return new Promise(function (resolve, reject) {
+                    getFormDigestValue().then(function (formDigestValue) {
+                        $http({
+                            url: window["SITE_LOCATION_URL"] +
+                                '/_api/web/GetFileByServerRelativeUrl(\'' + CONSTANT.webServerRelativeUrl + "/" + libTitle + "/" + fileName + '\')',
+                            method: 'POST',
+                            headers: {
+                                "accept": "application/json;odata=verbose",
+                                "content-type": "application/json;odata=verbose",
+                                "X-RequestDigest": formDigestValue,
+                                'X-HTTP-Method': 'DELETE',
+                                "IF-MATCH": "*"
+                            },
+                        }).then(function (res) {
+                            resolve(res);
+                        });
+                    });
+                });
             }
 
             function capitalizeFirstLetter(string) {

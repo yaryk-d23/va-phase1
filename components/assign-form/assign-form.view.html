@@ -12,6 +12,8 @@
             id="BCMID"
             ng-model="ctrl.formData.BCMID"
             required
+            disabled
+            ng-disabled="!!ctrl.$routeParams.bcmid"
           />
           <span
             class="error-msg"
@@ -95,15 +97,26 @@
           <th>BCM Section Number</th>
           <th>BCM Section Description</th>
           <th>Assignee Email Address</th>
+          <th style="width: 70px"></th>
         </tr>
-        <tr ng-repeat="item in ctrl.sections">
+        <tr ng-repeat="item in ctrl.sections track by $index">
           <td>{{item.Title}}</td>
           <td>{{item.BCMSectionNumber}}</td>
           <td>{{item.BCMSectionDescription}}</td>
           <td>{{item.Assignee ? item.Assignee.Title : ''}}</td>
+          <td>
+            <i
+              class="glyphicon glyphicon-pencil edit-icon"
+              ng-click="ctrl.updateSection($index)"
+            ></i>
+            <i
+              class="glyphicon glyphicon-trash remove-icon"
+              ng-click="ctrl.deleteSection($index)"
+            ></i>
+          </td>
         </tr>
         <tr ng-if="ctrl.sections.length === 0">
-          <td colspan="4">Please add new sections...</td>
+          <td colspan="5">Please add new sections...</td>
         </tr>
       </table>
     </div>
@@ -112,36 +125,39 @@
         <label for="Attachments" class="control-label">
           Attachments
           <select-files
+            multiple
             name="Attachments"
             model="ctrl.$AttachmentsFiles"
           ></select-files>
         </label>
       </p>
-      <p ng-repeat="file in ctrl.$AttachmentsFiles track by $index">
-        <!-- <input
-          type="text"
-          class="form-control"
-          ng-value="file.$file.name"
-          disabled
-        /> -->
-        <span class="file-name"
-          >{{file.$file.name}} ({{ctrl.parseByteToMB(file.$file.size)}})</span
-        >
+      <p
+        ng-repeat="file in ctrl.$AttachmentsFiles track by $index"
+        style="position: relative"
+      >
+        <span ng-if="!file.url" class="file-name">{{file.$file.name}}</span>
+        <a ng-href="{{file.url}}" target="_blank" ng-if="file.url">
+          <span class="file-name">{{file.$file.name}}</span>
+        </a>
         <span
-          ng-if="file.url"
           class="glyphicon glyphicon-remove"
           style="
             color: red;
             position: absolute;
-            right: 0;
-            top: 10px;
+            margin-left: 5px;
+            top: 4px;
             cursor: pointer;
           "
+          ng-click="ctrl.deleteFile($index)"
         ></span>
       </p>
     </div>
     <div class="text-right">
-      <button type="button" class="btn btn-primary" ng-click="ctrl.submit()">
+      <a class="btn btn-default" ng-href="#/assign-form-dashboard"> Cancel </a>
+      <button type="button" class="btn btn-success" ng-click="ctrl.save()">
+        Save
+      </button>
+      <button type="button" class="btn btn-primary" ng-click="ctrl.save(true)">
         Submit
       </button>
     </div>

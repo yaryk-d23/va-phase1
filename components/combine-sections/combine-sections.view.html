@@ -1,0 +1,127 @@
+<div id="combine-sections">
+  <h3>Combine BCM Sections</h3>
+  <ng-form name="ctrl.form">
+    <div>
+      <div class="col-sm-12 col-md-3">
+        <div class="form-group">
+          <label for="BCMID" class="control-label required">BCM ID</label>
+          <select
+            class="form-control"
+            name="BCMID"
+            id="BCMID"
+            ng-options="v as v[0].BCMID for (i, v) in ctrl.allSections track by v[0].BCMID"
+            ng-model="ctrl.formData"
+            ng-change="ctrl.changeBCMId()"
+            required
+          ></select>
+          <span
+            class="error-msg"
+            ng-show="ctrl.form.BCMID.$touched && ctrl.form.BCMID.$invalid"
+            >BCM ID is required.</span
+          >
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-3">
+        <div class="form-group">
+          <label for="BCMTitle" class="control-label">BCM Title</label>
+          <input
+            type="text"
+            class="form-control"
+            name="BCMTitle"
+            id="BCMTitle"
+            ng-model="ctrl.formData[0].BCMTitle.Title"
+            readonly
+          />
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div>
+      <div class="col-sm-12">
+        <div class="sections-header">
+          <h4>BCM Updates</h4>
+        </div>
+        <div>
+          <table class="table table-bordered table-striped">
+            <tr>
+              <th>BCM Section Title</th>
+              <th>BCM Section Number</th>
+              <th>BCM Section Description</th>
+              <th style="width: 220px">BCM Attachments</th>
+              <th>BCM Section Status</th>
+            </tr>
+            <tr ng-repeat="item in ctrl.formData track by $index">
+              <td>{{item.Title}}</td>
+              <td>{{item.BCMSectionNumber}}</td>
+              <td>{{item.BCMSectionDescription}}</td>
+              <td>
+                <div
+                  ng-repeat="file in ctrl.$Attachments[item.Id] track by $index"
+                  style="
+                    position: relative;
+                    max-width: 200px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                  "
+                >
+                  <a
+                    ng-href="{{file.url}}"
+                    target="_blank"
+                    ng-if="file.url"
+                    uib-tooltip="{{file.$file.name}}"
+                    tooltip-append-to-body="true"
+                    tooltip-class="fileTooltip"
+                  >
+                    <span class="file-name" style="font-size: 12px"
+                      >{{file.$file.name}}</span
+                    >
+                  </a>
+                </div>
+              </td>
+              <td>{{item.Status}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div>
+      <div class="col-sm-12 col-md-3">
+        <div>
+          <label for="DraftBCMAttachment" class="control-label">
+            Draft BCM
+            <select-files
+              name="Attachments"
+              model="ctrl.$DraftBCMAttachment"
+            ></select-files>
+          </label>
+        </div>
+        <p
+          ng-repeat="file in ctrl.$DraftBCMAttachment track by $index"
+          style="position: relative"
+        >
+          <span ng-if="!file.url" class="file-name">{{file.$file.name}}</span>
+          <a ng-href="{{file.url}}" target="_blank" ng-if="file.url">
+            <span class="file-name">{{file.$file.name}}</span>
+          </a>
+          <span
+            class="glyphicon glyphicon-remove"
+            style="color: red; margin-left: 5px; top: 3px; cursor: pointer"
+            ng-click="ctrl.removeDraftBCMAttachment()"
+          ></span>
+        </p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </ng-form>
+  <div class="text-right">
+    <a class="btn btn-default" ng-href="#/combine-dashboard"> Cancel </a>
+    <button type="button" class="btn btn-success" ng-click="ctrl.save()">
+      Save
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="ctrl.save(true)">
+      Submit
+    </button>
+  </div>
+</div>

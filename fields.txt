@@ -1,0 +1,6 @@
+BCM Sections List
+
+BCMUpdateDate - date
+KeyStakeholders - text
+BCMChecklistUpdated - bool
+BCMSectionUpdate - multile plain text
