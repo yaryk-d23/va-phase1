@@ -32,6 +32,15 @@ app.run(function ($rootScope, $location, $Preload, $ApiService) {
         //     });
         // }, 0);
     }
+    function fixLayOut() {
+        $(window.parent.document).find('.b_a_3b589226').css({
+            'height': $('html').height() + 'px',
+            'padding-bottom': '0'
+        });
+    }
+    window.parent.addEventListener('resize', fixLayOut);
+    let resizeEvent = new Event('resize');
+    window.parent.dispatchEvent(resizeEvent);
 });
 app.controller('AppCtrl', [function () {
     var vm = this;
