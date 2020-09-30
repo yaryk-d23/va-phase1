@@ -31,6 +31,7 @@
                 sendAssignorEmail: sendAssignorEmail,
                 sendAssigneeEmail: sendAssigneeEmail,
                 sendRejectedEmail: sendRejectedEmail,
+                sendCombineEmail: sendCombineEmail,
                 sendReviewerEmail: sendReviewerEmail,
                 sendFinalReviewerRejectEmail: sendFinalReviewerRejectEmail,
             };
@@ -42,7 +43,7 @@
                     var email = angular.copy(emailSettings);
                     email.properties.To.results = [item.Assignee.EMail || item.Assignee.Email];
                     email.properties.From = window.currentSPUser.Email;
-                    email.properties.Subject = "Auto: Action Required– Cycle Memo Section Update";
+                    email.properties.Subject = "Assigned New Section";
                     email.properties.Body = "<div>" +
                         '<p>Hi,</p>' +
                         '<p>A business cycle memo is being updated in SharePoint. You have been assigned to update a section(s). Please click ' +
@@ -50,8 +51,8 @@
                         ' to review and update.</p>' +
                         '<p>Best, <br/><br/>' +
                         (window.currentSPUser.Title + ', Auditor<br/>') +
-                        'Michael Scott Paper Company<br/>' +
-                        '594-555-8478' +
+
+
                         '</p>' +
                         "</div>";
                     req.push(sendEmail(email));
@@ -67,9 +68,9 @@
 
             function sendAssigneeEmail(section) {
                 var email = angular.copy(emailSettings);
-                email.properties.To.results = [window.currentSPUser.Email];
+                email.properties.To.results = [section.Author.EMail];
                 email.properties.From = window.currentSPUser.Email;
-                email.properties.Subject = "Auto: Action Required– Cycle Memo Section Update";
+                email.properties.Subject = "Updated Section";
                 email.properties.Body = "<div>" +
                     '<p>Hi,</p>' +
                     '<p>A business cycle memo section has been updated in SharePoint and is awaiting your approval. Please click ' +
@@ -77,8 +78,8 @@
                     ' to review and approve.</p>' +
                     '<p>Best, <br/><br/>' +
                     (window.currentSPUser.Title + ', BCM Writer<br/>') +
-                    'Michael Scott Paper Company<br/>' +
-                    '594-555-8478' +
+
+
                     '</p>' +
                     "</div>";
 
@@ -95,7 +96,7 @@
                 var email = angular.copy(emailSettings);
                 email.properties.To.results = [section.Assignee.EMail];
                 email.properties.From = window.currentSPUser.Email;
-                email.properties.Subject = "Auto: Action Required– Cycle Memo Section Update";
+                email.properties.Subject = "Reject Section";
                 email.properties.Body = "<div>" +
                     '<p>Hi,</p>' +
                     '<p>A business cycle memo section requires edits in SharePoint. Please click ' +
@@ -103,8 +104,33 @@
                     ' to edit/update and re-submit.</p>' +
                     '<p>Best, <br/><br/>' +
                     (window.currentSPUser.Title + ', BCMs<br/>') +
-                    'Michael Scott Paper Company<br/>' +
-                    '594-555-8478' +
+
+
+                    '</p>' +
+                    "</div>";
+
+                return new Promise(function (resolve, reject) {
+                    sendEmail(email).then(function (res) {
+                        resolve(res);
+                    });
+                });
+
+            }
+
+            function sendCombineEmail(sections) {
+                var email = angular.copy(emailSettings);
+                email.properties.To.results = [window.currentSPUser.Email];
+                email.properties.From = window.currentSPUser.Email;
+                email.properties.Subject = "Combined Sections";
+                email.properties.Body = "<div>" +
+                    '<p>Hi,</p>' +
+                    '<p>A business cycle memo section has been updated in SharePoint and is awaiting your approval. Please click ' +
+                    '<a target="_blank" href="' + window.APP_PAGE_LOCATION_URL + '#/final-approve-sections/' + sections[0].BCMID + '">here</a>' +
+                    ' to review and approve.</p>' +
+                    '<p>Best, <br/><br/>' +
+                    (window.currentSPUser.Title + ', BCM<br/>') +
+
+
                     '</p>' +
                     "</div>";
 
@@ -120,7 +146,7 @@
                 var email = angular.copy(emailSettings);
                 email.properties.To.results = [window.currentSPUser.Email];
                 email.properties.From = window.currentSPUser.Email;
-                email.properties.Subject = "Auto: Action Required– Cycle Memo Section Update";
+                email.properties.Subject = "Final Approved Sections";
                 email.properties.Body = "<div>" +
                     '<p>Hi,</p>' +
                     '<p>A business cycle memo section has been updated in SharePoint and is awaiting your approval. Please click ' +
@@ -128,8 +154,8 @@
                     ' to review and approve.</p>' +
                     '<p>Best, <br/><br/>' +
                     (window.currentSPUser.Title + ', BCM<br/>') +
-                    'Michael Scott Paper Company<br/>' +
-                    '594-555-8478' +
+
+
                     '</p>' +
                     "</div>";
 
@@ -145,7 +171,7 @@
                 var email = angular.copy(emailSettings);
                 email.properties.To.results = [window.currentSPUser.Email];
                 email.properties.From = window.currentSPUser.Email;
-                email.properties.Subject = "Auto: Action Required– Cycle Memo Section Update";
+                email.properties.Subject = "Final Reviewer Reject Sections";
                 email.properties.Body = "<div>" +
                     '<p>Hi,</p>' +
                     '<p>A business cycle memo section requires edits in SharePoint. Please click ' +
@@ -153,8 +179,8 @@
                     ' to edit/update and re-submit</p>' +
                     '<p>Best, <br/><br/>' +
                     (window.currentSPUser.Title + ', Associate Director<br/>') +
-                    'Michael Scott Paper Company<br/>' +
-                    '594-555-8478' +
+
+
                     '</p>' +
                     "</div>";
 

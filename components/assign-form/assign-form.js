@@ -14,7 +14,9 @@
         var ctrl = this;
         ctrl.$routeParams = $routeParams;
         ctrl.$AttachmentsFiles = [];
-        ctrl.formData = {};
+        ctrl.formData = {
+            BCMDueDate: new Date()
+        };
         ctrl.bcmItems = [];
         ctrl.sections = [];
         ctrl.dateOptions = {
@@ -28,7 +30,7 @@
             //get data if form created
             if ($routeParams.bcmid) {
                 var formReq = {
-                    bcmItems: $ApiService.getListItems('Business Cycle Memos', ''),
+                    bcmItems: $ApiService.getListItems('Business Process Areas', ''),
                     sections: $ApiService.getListItems('BCM Sections', '$select=*,BCMTitle/Title,BCMTitle/Id,Assignee/Title,Assignee/Id,Assignee/EMail&$expand=BCMTitle,Assignee&$filter=BCMID eq \'' + $routeParams.bcmid + '\''),
                     attachments: $ApiService.getListItems('BCM Sections Attachments', '$expand=File&$filter=BCMID eq \'' + $routeParams.bcmid + '\' and AttachmentType eq \'Assign\'')
                 };
@@ -63,7 +65,7 @@
                 });
             }
             else {
-                $ApiService.getListItems('Business Cycle Memos', '').then(function (res) {
+                $ApiService.getListItems('Business Process Areas', '$filter=BCMStatus eq \'Complete\' or BCMStatus eq null').then(function (res) {
                     ctrl.bcmItems = res;
                     $Preload.hide();
                 });
@@ -166,8 +168,14 @@
                 return;
             }
             $Preload.show();
-            var req = [];
-            ctrl.sections.forEach(function (item) {
+            var req = [
+                $ApiService.updateListItem('Business Process Areas', ctrl.formData.BCMTitle.Id, {
+                    BCMStatus: 'New',
+                    '__metadata': { "type": 'SP.Data.processareasListItem' }
+                })
+            ];
+            ctrl.sections.forEach(function (item, key) {
+                ctrl.sections[key].BCMID = ctrl.formData.BCMID;
                 let newItem = angular.copy(item);
                 newItem.BCMID = ctrl.formData.BCMID;
                 newItem.BCMTitleId = ctrl.formData.BCMTitle.Id;
@@ -183,33 +191,29 @@
                 if (ctrl.$AttachmentsFiles && ctrl.$AttachmentsFiles.length) {
                     var filesReq = [];
                     ctrl.$AttachmentsFiles.forEach(function (file) {
-                        filesReq.push($ApiService.uploadFile('BCM Sections Attachments', file.$file));
-                    });
-                    $q.all(filesReq).then(function (fileRes) {
-                        filesReq = [];
-                        fileRes.forEach(function (file) {
-                            filesReq.push($ApiService.updateListItem('BCM Sections Attachments', file.ListItemAllFields.Id, {
+                        if (!file.url) {
+                            filesReq.push($ApiService.uploadFile('BCM Sections Attachments', file.$file, {
                                 BCMID: ctrl.formData.BCMID,
                                 AttachmentType: 'Assign',
                                 __metadata: { "type": 'SP.Data.BCMSectionsAttachmentsItem' }
                             }));
-                        });
-                        $q.all(filesReq).then(function (fileRes) {
-                            if (isSubmit) {
-                                $EmailService.sendAssignorEmail(ctrl.sections).then(function () {
-                                    setTimeout(function () {
-                                        $scope.$apply(function () {
-                                            $Preload.hide();
-                                            $location.path('/assign-form-dashboard');
-                                        });
-                                    }, 0);
-                                });
-                            }
-                            else {
-                                $Preload.hide();
-                                $location.path('/assign-form-dashboard');
-                            }
-                        });
+                        }
+                    });
+                    $q.all(filesReq).then(function (fileRes) {
+                        if (isSubmit) {
+                            $EmailService.sendAssignorEmail(ctrl.sections).then(function () {
+                                setTimeout(function () {
+                                    $scope.$apply(function () {
+                                        $Preload.hide();
+                                        $location.path('/assign-form-dashboard');
+                                    });
+                                }, 0);
+                            });
+                        }
+                        else {
+                            $Preload.hide();
+                            $location.path('/assign-form-dashboard');
+                        }
                     });
                 }
                 else {

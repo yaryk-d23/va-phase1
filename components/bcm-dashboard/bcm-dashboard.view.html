@@ -12,12 +12,27 @@
         <th>Last Updated</th>
         <th>BCM Status</th>
         <th>POC</th>
+        <th>Attachment</th>
       </tr>
       <tr ng-repeat="item in ctrl.items">
-        <td>{{item.BusinessProcessArea}}</td>
-        <td>{{item.Modified | date:'MM/dd/yyyy'}}</td>
+        <td>{{item.Title}}</td>
+        <td>
+          {{ctrl.sections[item.Id] ? (ctrl.sections[item.Id][0].Modified |
+          date:'MM/dd/yyyy') : '-'}}
+        </td>
         <td>{{item.BCMStatus}}</td>
         <td>{{item.POC ? item.POC.Title : ''}}</td>
+        <td>
+          <div
+            ng-if="ctrl.sections[item.Id] && ctrl.sections[item.Id].length"
+            ng-repeat="file in ctrl.attachments[ctrl.sections[item.Id][0].BCMID] track by $index"
+            style="position: relative"
+          >
+            <a ng-href="{{file.url}}" target="_blank">
+              <span class="file-name">{{file.$file.name}}</span>
+            </a>
+          </div>
+        </td>
       </tr>
     </table>
   </div>

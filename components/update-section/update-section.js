@@ -19,17 +19,18 @@
         };
         ctrl.$ChecklistAttachment = [];
         ctrl.$Attachments = [];
-        ctrl.formData = {};
+        ctrl.formData = {
+        };
         ctrl.selectedBCMData = {};
         ctrl.bcmSections = [];
         ctrl.internalControls = [];
 
         function loadData() {
             $ApiService.getCurrentUser().then(function (user) {
-                $ApiService.getListItems('BCM Sections', '$select=*,BCMTitle/Title&$expand=BCMTitle&$filter=AssigneeId eq ' + user.Id).then(function (res) {
+                $ApiService.getListItems('BCM Sections', '$select=*,BCMTitle/Title,BCMTitle/Id,Author/Title,Author/EMail&$expand=BCMTitle,Author&$filter=AssigneeId eq ' + user.Id).then(function (res) {
                     ctrl.bcmSections = res.map(function (item) {
                         item.BCMDueDate = new Date(item.BCMDueDate);
-                        item.BCMUpdateDate = item.BCMUpdateDate ? new Date(item.BCMUpdateDate) : null;
+                        item.BCMUpdateDate = item.BCMUpdateDate ? new Date(item.BCMUpdateDate) : new Date();
                         return item;
                     });
                     if ($routeParams.id) {
@@ -196,7 +197,12 @@
             };
             $ApiService.updateListItem('BCM Sections', ctrl.formData.Id, data).then(function (res) {
 
-                var req = [];
+                var req = [
+                    $ApiService.updateListItem('Business Process Areas', ctrl.formData.BCMTitle.Id, {
+                        BCMStatus: 'In Progress',
+                        '__metadata': { "type": 'SP.Data.processareasListItem' }
+                    })
+                ];
                 ctrl.internalControls.forEach(function (item) {
                     let newItem = angular.copy(item);
                     newItem.BCMSectionId = ctrl.formData.Id;
@@ -207,20 +213,24 @@
                     var filesReq = [];
                     if (ctrl.$ChecklistAttachment && ctrl.$ChecklistAttachment.length) {
                         ctrl.$ChecklistAttachment.forEach(function (file) {
-                            filesReq.push($ApiService.uploadFile('BCM Sections Attachments', file.$file, {
-                                BCMSectionId: ctrl.formData.Id,
-                                AttachmentType: 'Checklist',
-                                __metadata: { "type": 'SP.Data.BCMSectionsAttachmentsItem' }
-                            }));
+                            if (!file.url) {
+                                filesReq.push($ApiService.uploadFile('BCM Sections Attachments', file.$file, {
+                                    BCMSectionId: ctrl.formData.Id,
+                                    AttachmentType: 'Checklist',
+                                    __metadata: { "type": 'SP.Data.BCMSectionsAttachmentsItem' }
+                                }));
+                            }
                         });
                     }
                     if (ctrl.$Attachments && ctrl.$Attachments.length) {
                         ctrl.$Attachments.forEach(function (file) {
-                            filesReq.push($ApiService.uploadFile('BCM Sections Attachments', file.$file, {
-                                BCMSectionId: ctrl.formData.Id,
-                                AttachmentType: 'Section',
-                                __metadata: { "type": 'SP.Data.BCMSectionsAttachmentsItem' }
-                            }));
+                            if (!file.url) {
+                                filesReq.push($ApiService.uploadFile('BCM Sections Attachments', file.$file, {
+                                    BCMSectionId: ctrl.formData.Id,
+                                    AttachmentType: 'Section',
+                                    __metadata: { "type": 'SP.Data.BCMSectionsAttachmentsItem' }
+                                }));
+                            }
                         });
                     }
                     if (filesReq.length) {

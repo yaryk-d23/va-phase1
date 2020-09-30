@@ -179,6 +179,13 @@
             function uploadFile(libraryTitle, data, spdata) {
                 return new Promise(function (resolve, reject) {
                     getFormDigestValue().then(function (formDigestValue) {
+                        var addToFileName = "---" + (new Date).getTime() + "---" + Math.random() + "---";
+                        var input_file_name = data.name.split('.');
+                        var ext = input_file_name.pop();
+                        input_file_name = input_file_name.join(".")
+                        input_file_name = input_file_name.substring(0, 50)
+                        input_file_name = input_file_name + "." + ext
+
                         var config = {
                             headers: {
                                 "Accept": "application/json; odata=verbose",
@@ -188,7 +195,7 @@
                             responseType: "arraybuffer"
                         };
                         var url = window["SITE_LOCATION_URL"] +
-                            "/_api/web/lists/GetByTitle('" + libraryTitle + "')/RootFolder/Files/add(overwrite=true, url='" + data.name + "')?$select=ServerRelativeUrl,ListItemAllFields/Id&$expand=ListItemAllFields";
+                            "/_api/web/lists/GetByTitle('" + libraryTitle + "')/RootFolder/Files/add(overwrite=true, url='" + addToFileName + input_file_name + "')?$select=ServerRelativeUrl,ListItemAllFields/Id&$expand=ListItemAllFields";
                         $http({
                             method: "POST",
                             url: url,
@@ -196,14 +203,35 @@
                             data: data,
                             headers: config.headers
                         }).then(function (res) {
-                            if (spdata) {
-                                updateListItem(libraryTitle, res.data.d.ListItemAllFields.Id, spdata).then(function () {
-                                    resolve(res.data.d);
-                                });
-                            }
-                            else {
-                                resolve(res.data.d);
-                            }
+                            var createFileRes = res;
+                            var id = res.data.d.ListItemAllFields.Id;
+                            var OldServerRelativeUrl = res.data.d.ServerRelativeUrl;
+                            var ServerRelativeUrl = OldServerRelativeUrl.split("/");
+                            var file_name = ServerRelativeUrl.pop();
+                            file_name = file_name.replace(addToFileName, "");
+                            file_name = file_name.split('.');
+                            var ext = file_name.pop();
+                            file_name = file_name.join(".") + "-" + id + "." + ext;
+                            ServerRelativeUrl.push(file_name);
+                            ServerRelativeUrl = ServerRelativeUrl.join("/");
+                            $http({
+                                method: 'POST',
+                                url: window["SITE_LOCATION_URL"] + "/_api/web/getfilebyserverrelativeurl('" + OldServerRelativeUrl + "')/moveto(newurl='" + ServerRelativeUrl + "',flags=1)",
+                                headers: {
+                                    "Accept": "application/json;odata=verbose",
+                                    "content-type": "application/json;odata=verbose",
+                                    "X-RequestDigest": formDigestValue
+                                }
+                            }).then(function () {
+                                if (spdata) {
+                                    updateListItem(libraryTitle, id, spdata).then(function () {
+                                        resolve(createFileRes.data.d);
+                                    });
+                                }
+                                else {
+                                    resolve(createFileRes.data.d);
+                                }
+                            });
                         });
                     });
                 });

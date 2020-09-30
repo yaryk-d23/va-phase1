@@ -20,12 +20,12 @@
         ctrl.FinalApproverComments = '';
 
         function loadData() {
-            $ApiService.getListItems('BCM Sections', '$select=*,BCMTitle/Title&$expand=BCMTitle&$filter=BCMID eq \'' + $routeParams.id + '\'').then(function (res) {
+            $ApiService.getListItems('BCM Sections', '$select=*,BCMTitle/Title,BCMTitle/Id&$expand=BCMTitle&$filter=BCMID eq \'' + $routeParams.id + '\'').then(function (res) {
                 ctrl.formData = res;
                 ctrl.FinalApproverComments = ctrl.formData[0].FinalApproverComments;
                 var req = {
                     internalControls: $ApiService.getListItems('Internal Controls', '$select=*,BCMSection/Title&$expand=BCMSection&$filter=' + createSectionIdFilterValue(res)),
-                    allSections: $ApiService.getListItems('BCM Sections', '$select=*,BCMTitle/Title&$expand=BCMTitle'),
+                    allSections: $ApiService.getListItems('BCM Sections', '$select=*,BCMTitle/Title,BCMTitle/Id&$expand=BCMTitle'),
                     attachments: $ApiService.getListItems('BCM Sections Attachments', '$expand=File&$filter=(' + createSectionIdFilterValue(res) + ') and AttachmentType eq \'Section\''),
                     draftBCMAttachment: $ApiService.getListItems('BCM Sections Attachments', '$expand=File&$filter=BCMID eq \'' + $routeParams.id + '\' and AttachmentType eq \'Draft BCM\''),
                 };
@@ -77,7 +77,12 @@
             // }
             $Preload.show();
 
-            var req = [];
+            var req = [
+                $ApiService.updateListItem('Business Process Areas', ctrl.formData[0].BCMTitle.Id, {
+                    BCMStatus: 'Complete',
+                    '__metadata': { "type": 'SP.Data.processareasListItem' }
+                })
+            ];
             var data = {
                 FinalApproverComments: ctrl.FinalApproverComments,
                 Stage: 'Published',
@@ -87,14 +92,12 @@
                 req.push($ApiService.updateListItem('BCM Sections', item.Id, data));
             });
             $q.all(req).then(function () {
-                $EmailService.sendReviewerEmail(ctrl.formData).then(function () {
-                    setTimeout(function () {
-                        $scope.$apply(function () {
-                            $Preload.hide();
-                            $location.path('/publish-dashboard');
-                        });
-                    }, 0);
-                });
+                setTimeout(function () {
+                    $scope.$apply(function () {
+                        $Preload.hide();
+                        $location.path('/bcm-dashboard');
+                    });
+                }, 0);
             });
         }
 

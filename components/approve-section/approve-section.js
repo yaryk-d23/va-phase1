@@ -33,7 +33,7 @@
             $q.all(req).then(function (reqRes) {
                 if (reqRes.section.length) {
                     ctrl.formData = reqRes.section[0];
-                    ctrl.formData.BCMApprovedDate = ctrl.formData.BCMApprovedDate ? new Date(ctrl.formData.BCMApprovedDate) : null;
+                    ctrl.formData.BCMApprovedDate = ctrl.formData.BCMApprovedDate ? new Date(ctrl.formData.BCMApprovedDate) : new Date();
                     ctrl.internalControls = reqRes.internalControls;
                     // reqRes.attachments.forEach(function (file) {
                     //     ctrl.$Attachments.push({

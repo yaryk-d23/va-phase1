@@ -43,6 +43,8 @@ var scripts = [
       "components/approve-dashboard/approve-dashboard.js",
       "components/combine-dashboard/combine-dashboard.js",
       "components/publish-dashboard/publish-dashboard.js",
+      "components/final-approve-section/final-approve-section.js",
+      "components/final-approve-dashboard/final-approve-dashboard.js",
     ];
   var styles = [
       "modules/bootstrap/css/bootstrap.min.css",
@@ -62,6 +64,8 @@ var scripts = [
       "components/approve-dashboard/approve-dashboard.style.css",
       "components/combine-dashboard/combine-dashboard.style.css",
       "components/publish-dashboard/publish-dashboard.style.css",
+      "components/final-approve-section/final-approve-section.style.css",
+      "components/final-approve-dashboard/final-approve-dashboard.style.css",
     ];
 
   for (var i = 0; i < styles.length; i++) {

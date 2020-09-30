@@ -59,6 +59,9 @@
         }
 
         ctrl.save = function (isSubmit) {
+            if (!ctrl.$DraftBCMAttachment && !ctrl.$DraftBCMAttachment.length) {
+                return;
+            }
             if (ctrl.form.$invalid) {
                 angular.forEach(ctrl.form.$error, function (field) {
                     angular.forEach(field, function (errorField) {
@@ -80,15 +83,17 @@
                 var filesReq = [];
                 if (ctrl.$DraftBCMAttachment && ctrl.$DraftBCMAttachment.length) {
                     ctrl.$DraftBCMAttachment.forEach(function (file) {
-                        filesReq.push($ApiService.uploadFile('BCM Sections Attachments', file.$file, {
-                            BCMID: ctrl.formData[0].BCMID,
-                            AttachmentType: 'Draft BCM',
-                            __metadata: { "type": 'SP.Data.BCMSectionsAttachmentsItem' }
-                        }));
+                        if (!file.url) {
+                            filesReq.push($ApiService.uploadFile('BCM Sections Attachments', file.$file, {
+                                BCMID: ctrl.formData[0].BCMID,
+                                AttachmentType: 'Draft BCM',
+                                __metadata: { "type": 'SP.Data.BCMSectionsAttachmentsItem' }
+                            }));
+                        }
                     });
                     $q.all(filesReq).then(function () {
                         if (isSubmit) {
-                            $EmailService.sendReviewerEmail(ctrl.formData).then(function () {
+                            $EmailService.sendCombineEmail(ctrl.formData).then(function () {
                                 setTimeout(function () {
                                     $scope.$apply(function () {
                                         $Preload.hide();
@@ -109,7 +114,7 @@
                 }
                 else {
                     if (isSubmit) {
-                        $EmailService.sendReviewerEmail(ctrl.formData).then(function () {
+                        $EmailService.sendCombineEmail(ctrl.formData).then(function () {
                             setTimeout(function () {
                                 $scope.$apply(function () {
                                     $Preload.hide();

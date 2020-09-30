@@ -79,6 +79,12 @@ app.config(function ($routeProvider, $locationProvider) {
         .when('/publish-dashboard', {
             template: '<publish-dashboard></publish-dashboard>'
         })
+        .when('/final-approve-sections/:id', {
+            template: '<final-approve-section></final-approve-section>'
+        })
+        .when('/final-approve-dashboard', {
+            template: '<final-approve-dashboard></final-approve-dashboard>'
+        })
         .otherwise('/bcm-dashboard');
 });
 app.directive('fixFocusOnTouch', function () {

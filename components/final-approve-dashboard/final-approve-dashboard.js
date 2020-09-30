@@ -1,7 +1,7 @@
 (function () {
     angular.module('App')
-        .component('publishDashboard', {
-            templateUrl: window["SITE_LOCATION_URL"] + '/SiteAssets/bcm-updates/components/publish-dashboard/publish-dashboard.view.html?rnd' + Math.random(),
+        .component('finalApproveDashboard', {
+            templateUrl: window["SITE_LOCATION_URL"] + '/SiteAssets/bcm-updates/components/final-approve-dashboard/final-approve-dashboard.view.html?rnd' + Math.random(),
             bindings: {
                 //user: '<'
             },
@@ -13,7 +13,7 @@
         $Preload.show();
         var ctrl = this;
         ctrl.bcmSections = [];
-        $ApiService.getListItems('BCM Sections', '$select=*,BCMTitle/Title&$expand=BCMTitle&$filter=Stage eq \'Final Approved\'').then(function (res) {
+        $ApiService.getListItems('BCM Sections', '$select=*,BCMTitle/Title&$expand=BCMTitle&$filter=Stage eq \'Combined\'').then(function (res) {
             ctrl.bcmSections = groupBy(res, 'BCMID');;
             $Preload.hide();
         });
